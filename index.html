@@ -338,107 +338,53 @@
   .n8n-error-title h2{ font-size: 17px; margin: 0; font-weight: 700; }
   .n8n-error-title p{ margin: 4px 0 0; font-size: 12px; color: var(--text-muted); }
 
-  .n8n-error-week{ display:flex; align-items:center; gap: 8px; }
-  .week-select{
-    background: var(--surface-2);
-    border: 1px solid var(--border);
-    color: var(--text);
-    font-family: 'Inter', sans-serif;
-    font-size: 12px;
-    padding: 7px 10px;
-    border-radius: 8px;
-    outline: none;
-    cursor: pointer;
-    max-width: 180px;
-  }
-  .week-select:focus{ border-color: var(--error); }
-  .icon-btn{
-    background: var(--surface-2);
-    border: 1px solid var(--border);
-    color: var(--text);
-    width: 32px; height: 32px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 14px;
-    display:flex; align-items:center; justify-content:center;
-    flex-shrink: 0;
-  }
-  .icon-btn:hover{ border-color: var(--error); color: var(--error); }
-
-  .n8n-error-body{
-    display:flex;
-    align-items:center;
-    gap: 30px;
-    flex-wrap: wrap;
-  }
-  .n8n-error-hero{ text-align:center; }
-  .n8n-error-hero .value{
+  .n8n-error-total{ text-align:center; flex-shrink:0; }
+  .n8n-error-total .value{
     font-family:'Space Grotesk', sans-serif;
-    font-size: 44px;
+    font-size: 36px;
     font-weight: 800;
     line-height: 1;
     color: var(--error);
   }
-  .n8n-error-hero .label{ font-size: 11px; color: var(--text-faint); margin-top: 4px; }
-  .n8n-error-avg{ text-align:center; }
-  .n8n-error-avg .value{ font-family:'Space Grotesk', sans-serif; font-size: 26px; font-weight: 700; color: var(--text-muted); }
-  .n8n-error-avg .label{ font-size: 10.5px; color: var(--text-faint); margin-top: 4px; }
-  .n8n-error-count{ text-align:center; }
-  .n8n-error-count .value{ font-family:'Space Grotesk', sans-serif; font-size: 26px; font-weight: 700; }
-  .n8n-error-count .label{ font-size: 10.5px; color: var(--text-faint); margin-top: 4px; }
-  .n8n-error-spark{ flex: 1; min-width: 160px; }
-  .n8n-error-spark svg{ width: 100%; height: 44px; display:block; }
-  .n8n-error-spark .label{ font-size: 10.5px; color: var(--text-faint); margin-top: 4px; text-align:center; }
+  .n8n-error-total .label{ font-size: 10.5px; color: var(--text-faint); margin-top: 4px; }
+
   .n8n-error-empty{ font-size: 12.5px; color: var(--text-muted); }
 
-  .n8n-error-form{
-    margin-top: 18px;
-    padding-top: 16px;
-    border-top: 1px dashed var(--border);
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px 16px;
-  }
-  .n8n-error-form .field label{
-    display:block; font-size: 11.5px; color: var(--text-muted); margin-bottom: 5px;
-  }
-  .n8n-error-form .field input{
-    width: 100%;
-    background: var(--surface-2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 9px 12px;
-    color: var(--text);
-    font-family:'IBM Plex Mono', monospace;
-    font-size: 12px;
-    outline: none;
-  }
-  .n8n-error-form .field input:focus{ border-color: var(--error); }
-  .n8n-error-form .form-actions{
-    grid-column: 1 / -1;
-    display:flex;
-    align-items:center;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-  .n8n-error-form button{
-    background: var(--text);
-    color: var(--bg);
-    border: none;
-    border-radius: 8px;
-    padding: 9px 16px;
+  .erro-lista{ display:flex; flex-direction:column; gap: 10px; }
+  .erro-item{ display:flex; align-items:center; gap: 12px; }
+  .erro-item .erro-nome{
+    flex: 1;
     font-size: 12.5px;
-    font-weight: 600;
-    cursor: pointer;
-    font-family: 'Inter', sans-serif;
+    color: var(--text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
-  .n8n-error-form button.ghost{
-    background: transparent;
+  .erro-item .erro-barra-track{
+    flex: 1.4;
+    height: 8px;
+    background: var(--surface-2);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .erro-item .erro-barra-fill{
+    height: 100%;
+    background: var(--error);
+    border-radius: 999px;
+  }
+  .erro-item .erro-qtd{
+    width: 30px;
+    text-align: right;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12.5px;
     color: var(--text-muted);
-    border: 1px solid var(--border);
+    flex-shrink: 0;
   }
-  .n8n-error-form button:hover{ opacity:.85; }
-  @media (max-width: 700px){ .n8n-error-form{ grid-template-columns: 1fr; } }
+  @media (max-width: 700px){
+    .erro-item .erro-nome{ white-space: normal; flex-basis: 100%; }
+    .erro-item{ flex-wrap: wrap; }
+    .erro-item .erro-barra-track{ order: 3; flex-basis: 100%; }
+  }
 </style>
 </head>
 <body>
@@ -472,49 +418,15 @@
       <div class="n8n-error-title">
         <span class="tag">OPERACIONAL</span>
         <h2>Erros n8n</h2>
-        <p>% de erros dos agentes sobre o total de erros do servidor — inserido manualmente por semana</p>
+        <p id="errosSubtitulo">Ocorrências por tipo de erro no mês corrente — planilha de logs, atualizada diariamente</p>
       </div>
-      <div class="n8n-error-week">
-        <select id="erroWeekSelect" class="week-select"></select>
-        <button id="erroEditBtn" class="icon-btn" title="Registrar semana" type="button">✎</button>
-      </div>
-    </div>
-    <div class="n8n-error-body">
-      <div class="n8n-error-hero">
-        <div class="value" id="erroPctValue">—%</div>
-        <div class="label">erros de agentes / total do servidor</div>
-      </div>
-      <div class="n8n-error-avg">
-        <div class="value" id="erroAvgValue">—%</div>
-        <div class="label">média móvel (4 sem.)</div>
-      </div>
-      <div class="n8n-error-count">
-        <div class="value" id="erroQtdValue">—</div>
-        <div class="label">agentes / total servidor</div>
-      </div>
-      <div class="n8n-error-spark" id="erroSparkWrap">
-        <svg id="erroSparkline" viewBox="0 0 200 44" preserveAspectRatio="none"></svg>
-        <div class="label">últimas semanas</div>
+      <div class="n8n-error-total">
+        <div class="value" id="errosTotalValue">—</div>
+        <div class="label">erros no mês</div>
       </div>
     </div>
-    <div class="n8n-error-form" id="erroForm" style="display:none;">
-      <div class="field">
-        <label>Semana</label>
-        <input type="week" id="erroInputWeek">
-      </div>
-      <div class="field">
-        <label>Erros totais do servidor</label>
-        <input type="number" id="erroInputTotal" min="0" step="1" placeholder="ex: 40">
-      </div>
-      <div class="field">
-        <label>Erros dos agentes</label>
-        <input type="number" id="erroInputQtd" min="0" step="1" placeholder="ex: 14">
-      </div>
-      <div class="form-actions">
-        <button id="erroSaveBtn" type="button">Salvar semana</button>
-        <button id="erroDeleteBtn" class="ghost" type="button">Excluir semana</button>
-        <button id="erroCancelBtn" class="ghost" type="button">Cancelar</button>
-      </div>
+    <div id="errosLista">
+      <p class="n8n-error-empty">Carregando…</p>
     </div>
   </div>
 
@@ -582,7 +494,6 @@
     sucesso:   { titulo: 'IA de Sucesso do Cliente', sub: 'Atendimento e suporte a clientes ativos' },
   };
 
-  const ERRO_KEY = 'painel-geral-erros-n8n';
   const DADOS_JSON_URL = 'dados.json'; // publicado pelo n8n no mesmo repositório/Pages deste painel
 
   let officeData = {};       // { officeId: jsonPayload | {erro} }
@@ -590,7 +501,6 @@
   let currentPeriod = 'hoje';
   const mesCache = {};        // { 'yyyy-MM': { officeId: periodo_customizado } }
   let customData = {};        // dados do mês atualmente selecionado (após fetchMonth)
-  let errosData = {};         // { 'YYYY-Www': { quantidade, percentual } } — inserido manualmente
 
   const els = {
     pulseDot: document.getElementById('pulseDot'),
@@ -600,19 +510,9 @@
     lastUpdated: document.getElementById('lastUpdated'),
     periodTabs: document.getElementById('periodTabs'),
     monthSelect: document.getElementById('monthSelect'),
-    erroWeekSelect: document.getElementById('erroWeekSelect'),
-    erroEditBtn: document.getElementById('erroEditBtn'),
-    erroPctValue: document.getElementById('erroPctValue'),
-    erroAvgValue: document.getElementById('erroAvgValue'),
-    erroQtdValue: document.getElementById('erroQtdValue'),
-    erroSparkline: document.getElementById('erroSparkline'),
-    erroForm: document.getElementById('erroForm'),
-    erroInputWeek: document.getElementById('erroInputWeek'),
-    erroInputTotal: document.getElementById('erroInputTotal'),
-    erroInputQtd: document.getElementById('erroInputQtd'),
-    erroSaveBtn: document.getElementById('erroSaveBtn'),
-    erroDeleteBtn: document.getElementById('erroDeleteBtn'),
-    erroCancelBtn: document.getElementById('erroCancelBtn'),
+    errosTotalValue: document.getElementById('errosTotalValue'),
+    errosLista: document.getElementById('errosLista'),
+    errosSubtitulo: document.getElementById('errosSubtitulo'),
   };
 
   els.periodTabs.addEventListener('click', (e) => {
@@ -668,6 +568,7 @@
         ? 'Atualizado em: ' + new Date(data.atualizado_em).toLocaleString('pt-BR')
         : 'Atualizado em: ' + new Date().toLocaleString('pt-BR');
 
+      renderErrosLogs(data.errosLogs);
       render();
     } catch(err){
       setStatus('error', 'Não foi possível carregar o dados.json: ' + err.message);
@@ -827,177 +728,41 @@
       renderCategory('sucesso', sucesso);
   }
 
-  // ---------- Erros n8n (métrica manual semanal) ----------
-  function loadErros(){
-    try { errosData = JSON.parse(localStorage.getItem(ERRO_KEY) || '{}'); }
-    catch(e){ errosData = {}; }
-  }
-
-  function saveErrosStorage(){
-    localStorage.setItem(ERRO_KEY, JSON.stringify(errosData));
-  }
-
-  function weekSortKey(weekStr){
-    const [y, w] = weekStr.split('-W');
-    return parseInt(y, 10) * 100 + parseInt(w, 10);
-  }
-
-  function sortedWeeks(){
-    return Object.keys(errosData).sort((a, b) => weekSortKey(b) - weekSortKey(a));
-  }
-
-  function getDateOfISOWeek(week, year){
-    const simple = new Date(year, 0, 1 + (week - 1) * 7);
-    const dow = simple.getDay();
-    const monday = new Date(simple);
-    if (dow <= 4) monday.setDate(simple.getDate() - dow + 1);
-    else monday.setDate(simple.getDate() + 8 - dow);
-    return monday;
-  }
-
-  function weekLabel(weekStr){
-    const [y, w] = weekStr.split('-W').map(Number);
-    const monday = getDateOfISOWeek(w, y);
-    const sunday = new Date(monday);
-    sunday.setDate(monday.getDate() + 6);
-    const fmt = (d) => d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
-    return `${fmt(monday)} – ${fmt(sunday)}`;
-  }
-
-  function currentISOWeekString(){
-    const now = new Date();
-    const d = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()));
-    const dayNum = d.getUTCDay() || 7;
-    d.setUTCDate(d.getUTCDate() + 4 - dayNum);
-    const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
-    const weekNo = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
-    return `${d.getUTCFullYear()}-W${String(weekNo).padStart(2, '0')}`;
-  }
-
-  function weekPercent(weekKey){
-    const entry = errosData[weekKey];
-    if (!entry) return 0;
-    const total = Number(entry.totalServidor) || 0;
-    const agentes = Number(entry.quantidade) || 0;
-    return total > 0 ? (agentes / total) * 100 : 0;
-  }
-
-  function movingAveragePercent(weekKey, windowSize){
-    const ascWeeks = sortedWeeks().slice().reverse(); // cronológico: mais antiga -> mais recente
-    const idx = ascWeeks.indexOf(weekKey);
-    if (idx === -1) return 0;
-    const start = Math.max(0, idx - windowSize + 1);
-    const windowWeeks = ascWeeks.slice(start, idx + 1);
-    const percents = windowWeeks.map(w => weekPercent(w));
-    return percents.reduce((a, b) => a + b, 0) / percents.length;
-  }
-
-  function populateWeekSelect(preferred){
-    const weeks = sortedWeeks();
-    if (weeks.length === 0){
-      els.erroWeekSelect.innerHTML = '<option value="">Sem semanas registradas</option>';
+  // ---------- Erros n8n (ranking de tipos de erro, vindo do dados.json) ----------
+  function renderErrosLogs(errosLogs){
+    if (!errosLogs || !Array.isArray(errosLogs.porTipo)){
+      els.errosTotalValue.textContent = '—';
+      els.errosLista.innerHTML = '<p class="n8n-error-empty">Sem dados de erro disponíveis ainda.</p>';
       return;
     }
-    els.erroWeekSelect.innerHTML = weeks
-      .map(w => `<option value="${w}">${weekLabel(w)}</option>`)
-      .join('');
-    if (preferred && weeks.includes(preferred)) els.erroWeekSelect.value = preferred;
-  }
 
-  function renderSparkline(weeks){
-    const recent = weeks.slice(0, 12).slice().reverse(); // mais antigas -> mais recentes, até 12 semanas
-    if (recent.length < 2){ els.erroSparkline.innerHTML = ''; return; }
-    const values = recent.map(w => weekPercent(w));
-    const max = Math.max(...values, 1);
-    const min = Math.min(...values, 0);
-    const range = (max - min) || 1;
-    const stepX = 200 / (values.length - 1);
-    const points = values.map((v, i) => {
-      const x = i * stepX;
-      const y = 40 - ((v - min) / range) * 34 - 2;
-      return `${x.toFixed(1)},${y.toFixed(1)}`;
-    }).join(' ');
-    els.erroSparkline.innerHTML = `<polyline points="${points}" fill="none" stroke="var(--error)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>`;
-  }
+    const nomesMes = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+    if (errosLogs.periodo){
+      const [ano, mes] = errosLogs.periodo.split('-');
+      els.errosSubtitulo.textContent = `Ocorrências por tipo de erro em ${nomesMes[parseInt(mes,10)-1]}/${ano} — planilha de logs, atualizada diariamente`;
+    }
 
-  function renderErrorCard(){
-    const weeks = sortedWeeks();
-    if (weeks.length === 0){
-      els.erroPctValue.textContent = '—%';
-      els.erroAvgValue.textContent = '—%';
-      els.erroQtdValue.textContent = '—';
-      els.erroSparkline.innerHTML = '';
-      populateWeekSelect();
+    els.errosTotalValue.textContent = errosLogs.total ?? 0;
+
+    if (!errosLogs.porTipo.length){
+      els.errosLista.innerHTML = '<p class="n8n-error-empty">Nenhum erro registrado no mês até agora.</p>';
       return;
     }
-    const selected = (els.erroWeekSelect.value && weeks.includes(els.erroWeekSelect.value))
-      ? els.erroWeekSelect.value
-      : weeks[0];
-    populateWeekSelect(selected);
-    const entry = errosData[selected] || { quantidade: 0, totalServidor: 0 };
-    const pct = weekPercent(selected);
-    const avgPct = movingAveragePercent(selected, 4);
-    els.erroPctValue.textContent = pct.toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + '%';
-    els.erroAvgValue.textContent = avgPct.toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + '%';
-    els.erroQtdValue.textContent = `${entry.quantidade ?? 0} / ${entry.totalServidor ?? 0}`;
-    renderSparkline(weeks);
+
+    const max = errosLogs.porTipo[0].quantidade || 1;
+    els.errosLista.innerHTML = `
+      <div class="erro-lista">
+        ${errosLogs.porTipo.map(item => `
+          <div class="erro-item">
+            <div class="erro-nome" title="${item.erro.replace(/"/g,'&quot;')}">${item.erro}</div>
+            <div class="erro-barra-track"><div class="erro-barra-fill" style="width:${(item.quantidade/max*100).toFixed(1)}%"></div></div>
+            <div class="erro-qtd">${item.quantidade}</div>
+          </div>
+        `).join('')}
+      </div>`;
   }
-
-  function openErroForm(){
-    const weeks = sortedWeeks();
-    const selected = els.erroWeekSelect.value || weeks[0] || currentISOWeekString();
-    const entry = errosData[selected];
-    els.erroInputWeek.value = selected || currentISOWeekString();
-    els.erroInputTotal.value = entry ? entry.totalServidor : '';
-    els.erroInputQtd.value = entry ? entry.quantidade : '';
-    els.erroForm.style.display = 'grid';
-  }
-
-  els.erroEditBtn.addEventListener('click', () => {
-    const isOpen = els.erroForm.style.display === 'grid';
-    if (isOpen){ els.erroForm.style.display = 'none'; }
-    else { openErroForm(); }
-  });
-
-  els.erroCancelBtn.addEventListener('click', () => {
-    els.erroForm.style.display = 'none';
-  });
-
-  els.erroSaveBtn.addEventListener('click', () => {
-    const w = els.erroInputWeek.value;
-    const totalServidor = parseInt(els.erroInputTotal.value, 10);
-    const qtd = parseInt(els.erroInputQtd.value, 10);
-    if (!w || isNaN(totalServidor) || isNaN(qtd)){
-      alert('Preencha semana, erros totais do servidor e erros dos agentes antes de salvar.');
-      return;
-    }
-    if (qtd > totalServidor){
-      alert('A quantidade de erros dos agentes não pode ser maior que o total de erros do servidor.');
-      return;
-    }
-    errosData[w] = { quantidade: qtd, totalServidor };
-    saveErrosStorage();
-    els.erroWeekSelect.value = w in errosData ? w : '';
-    els.erroForm.style.display = 'none';
-    renderErrorCard();
-  });
-
-  els.erroDeleteBtn.addEventListener('click', () => {
-    const w = els.erroInputWeek.value;
-    if (!w || !errosData[w]) return;
-    if (confirm('Excluir os dados da semana ' + weekLabel(w) + '?')){
-      delete errosData[w];
-      saveErrosStorage();
-      els.erroForm.style.display = 'none';
-      renderErrorCard();
-    }
-  });
-
-  els.erroWeekSelect.addEventListener('change', renderErrorCard);
 
   // ---------- Init ----------
-  loadErros();
-  renderErrorCard();
   loadDados();
 })();
 </script>
