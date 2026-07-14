@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel Geral — Advocacia Escalável</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700;800&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #16181C;
+    --surface: #1E2127;
+    --surface-2: #262A32;
+    --border: #333844;
+    --text: #F1EFE8;
+    --text-muted: #8D91A0;
+    --text-faint: #5C6070;
+
+    --comercial: #E2764C;
+    --comercial-soft: rgba(226,118,76,0.12);
+    --sucesso: #4B9EF0;
+    --sucesso-soft: rgba(75,158,240,0.12);
+
+    --green: #35C48C;
+    --amber: #F2A93B;
+    --purple: #8F7FE8;
+    --teal: #2FD1C0;
+    --error: #E2564C;
+    --error-soft: rgba(226,86,76,0.12);
+
+    --radius: 16px;
+    --radius-sm: 10px;
+  }
+
+  *{ box-sizing: border-box; }
+
+  body{
+    margin:0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+
+  .display{ font-family:'Space Grotesk', 'Inter', sans-serif; }
+  .mono{ font-family:'IBM Plex Mono', monospace; }
+
+  .wrap{
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 28px 24px 72px;
+  }
+
+  /* ---------- HEADER ---------- */
+  header{
+    margin-bottom: 22px;
+  }
+  header h1{
+    font-size: 23px;
+    font-weight: 700;
+    margin: 0 0 4px;
+    letter-spacing: -0.01em;
+  }
+  header p{
+    margin:0;
+    color: var(--text-muted);
+    font-size: 13px;
+  }
+
+  /* ---------- CONFIG PANEL ---------- */
+  .config{
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    margin: 18px 0 22px;
+  }
+  .config-toggle{
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+    cursor: pointer;
+    user-select: none;
+  }
+  .config-toggle .label{
+    font-size: 13px;
+    font-weight: 600;
+    display:flex;
+    align-items:center;
+    gap: 8px;
+  }
+  .config-toggle .chev{
+    color: var(--text-faint);
+    font-size: 11px;
+    transition: transform .15s;
+  }
+  .config.open .chev{ transform: rotate(180deg); }
+  .config-body{
+    display: none;
+    margin-top: 16px;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 16px;
+  }
+  .config.open .config-body{ display: grid; }
+  @media (max-width: 700px){ .config-body{ grid-template-columns: 1fr; } }
+
+  .field label{
+    display:block;
+    font-size: 11.5px;
+    color: var(--text-muted);
+    margin-bottom: 5px;
+  }
+  .field input{
+    width: 100%;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 9px 12px;
+    color: var(--text);
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 12px;
+    outline: none;
+  }
+  .field input:focus{ border-color: var(--sucesso); }
+
+  .config-actions{
+    grid-column: 1 / -1;
+    display:flex;
+    align-items:center;
+    gap: 10px;
+    margin-top: 4px;
+  }
+  .config-actions button{
+    background: var(--text);
+    color: var(--bg);
+    border: none;
+    border-radius: 8px;
+    padding: 9px 16px;
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+  }
+  .config-actions button:hover{ opacity:.85; }
+  .config-actions .status{ font-size: 12px; color: var(--text-muted); }
+
+  /* ---------- PERIOD TABS ---------- */
+  .status-row{
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+    margin-bottom: 26px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .pulse-wrap{ display:flex; align-items:center; gap: 8px; font-size: 12px; color: var(--text-muted); }
+  .pulse-dot{ width: 7px; height:7px; border-radius: 50%; background: var(--text-faint); position: relative; }
+  .pulse-dot.live{ background: var(--green); }
+  .pulse-dot.live::after{
+    content:''; position:absolute; inset:-4px; border-radius:50%;
+    border: 1.5px solid var(--green); opacity: .55;
+    animation: pulse 2.2s ease-out infinite;
+  }
+  .pulse-dot.error{ background:#E2564C; }
+  @keyframes pulse{ 0%{ transform:scale(0.6); opacity:.7; } 100%{ transform:scale(1.8); opacity:0; } }
+
+  .tabs{
+    display:inline-flex;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 3px;
+    gap: 2px;
+  }
+  .tabs button{
+    background: transparent; border: none; color: var(--text-muted);
+    font-family: 'Inter', sans-serif; font-size: 12.5px; font-weight: 500;
+    padding: 7px 16px; border-radius: 999px; cursor: pointer; transition: all .15s;
+  }
+  .tabs button.active{ background: var(--text); color: var(--bg); font-weight: 600; }
+
+  .month-select{
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    font-family: 'Inter', sans-serif;
+    font-size: 12.5px;
+    font-weight: 500;
+    padding: 8px 12px;
+    border-radius: 999px;
+    cursor: pointer;
+    outline: none;
+  }
+  .month-select:focus{ border-color: var(--sucesso); }
+  .month-select.active-custom{
+    color: var(--text);
+    border-color: var(--sucesso);
+    background: var(--sucesso-soft);
+  }
+
+  .error-banner{
+    background: rgba(226,86,76,0.1);
+    border: 1px solid rgba(226,86,76,0.3);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    margin-bottom: 18px;
+    font-size: 12.5px;
+    color: #E2564C;
+  }
+  .error-banner div + div{ margin-top: 4px; }
+
+  /* ---------- CATEGORY SECTION ---------- */
+  .category{ margin-bottom: 34px; }
+
+  .category-header{
+    display:flex;
+    align-items: center;
+    gap: 22px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+  }
+  .category-header.comercial{ border-top: 3px solid var(--comercial); }
+  .category-header.sucesso{ border-top: 3px solid var(--sucesso); }
+
+  .category-title{ flex: 1; min-width: 180px; }
+  .category-title .tag{
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: .04em;
+    padding: 3px 9px;
+    border-radius: 5px;
+    display:inline-block;
+    margin-bottom: 8px;
+  }
+  .category-header.comercial .tag{ background: var(--comercial-soft); color: var(--comercial); }
+  .category-header.sucesso .tag{ background: var(--sucesso-soft); color: var(--sucesso); }
+  .category-title h2{ font-size: 17px; margin: 0; font-weight: 700; }
+  .category-title p{ margin: 4px 0 0; font-size: 12px; color: var(--text-muted); }
+
+  .category-hero{
+    text-align: center;
+    padding: 0 18px;
+  }
+  .category-hero .value{
+    font-family:'Space Grotesk', sans-serif;
+    font-size: 44px;
+    font-weight: 800;
+    line-height: 1;
+  }
+  .category-hero.comercial .value{ color: var(--comercial); }
+  .category-hero.sucesso .value{ color: var(--sucesso); }
+  .category-hero .label{ font-size: 11px; color: var(--text-faint); margin-top: 4px; }
+
+  .category-mini-stats{
+    display:flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .mini-stat{ text-align: center; }
+  .mini-stat .value{ font-family:'Space Grotesk', sans-serif; font-size: 19px; font-weight: 700; }
+  .mini-stat .label{ font-size: 10.5px; color: var(--text-faint); margin-top: 2px; }
+
+  /* ---------- EMPTY / ERROR ---------- */
+  .empty-state{
+    text-align:center;
+    padding: 50px 20px;
+    color: var(--text-muted);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+  .empty-state h3{ color: var(--text); font-size: 15px; margin: 0 0 6px; }
+  .empty-state p{ font-size: 13px; margin: 0 auto; max-width: 420px; line-height: 1.5; }
+  .empty-state code{
+    background: var(--surface-2); padding: 2px 6px; border-radius: 4px;
+    font-family:'IBM Plex Mono', monospace; font-size: 12px;
+  }
+
+  .office-error{
+    font-size: 11.5px;
+    color: #E2564C;
+    background: rgba(226,86,76,0.1);
+    border: 1px solid rgba(226,86,76,0.3);
+    border-radius: var(--radius-sm);
+    padding: 8px 12px;
+    margin-bottom: 12px;
+  }
+
+  footer{
+    margin-top: 26px;
+    font-size: 11.5px;
+    color: var(--text-faint);
+  }
+
+  .skeleton{
+    background: linear-gradient(90deg, var(--surface-2) 25%, var(--border) 37%, var(--surface-2) 63%);
+    background-size: 400% 100%;
+    animation: shimmer 1.4s ease infinite;
+    border-radius: 5px;
+    color: transparent !important;
+  }
+  @keyframes shimmer{ 0%{ background-position: 100% 50%; } 100%{ background-position: 0 50%; } }
+
+  /* ---------- N8N ERROR CARD ---------- */
+  .n8n-error-card{
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--error);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    margin-bottom: 18px;
+  }
+  .n8n-error-top{
+    display:flex;
+    align-items:flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .n8n-error-title .tag{
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: .04em;
+    padding: 3px 9px;
+    border-radius: 5px;
+    display:inline-block;
+    margin-bottom: 8px;
+    background: var(--error-soft);
+    color: var(--error);
+  }
+  .n8n-error-title h2{ font-size: 17px; margin: 0; font-weight: 700; }
+  .n8n-error-title p{ margin: 4px 0 0; font-size: 12px; color: var(--text-muted); }
+
+  .n8n-error-week{ display:flex; align-items:center; gap: 8px; }
+  .week-select{
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    padding: 7px 10px;
+    border-radius: 8px;
+    outline: none;
+    cursor: pointer;
+    max-width: 180px;
+  }
+  .week-select:focus{ border-color: var(--error); }
+  .icon-btn{
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    display:flex; align-items:center; justify-content:center;
+    flex-shrink: 0;
+  }
+  .icon-btn:hover{ border-color: var(--error); color: var(--error); }
+
+  .n8n-error-body{
+    display:flex;
+    align-items:center;
+    gap: 30px;
+    flex-wrap: wrap;
+  }
+  .n8n-error-hero{ text-align:center; }
+  .n8n-error-hero .value{
+    font-family:'Space Grotesk', sans-serif;
+    font-size: 44px;
+    font-weight: 800;
+    line-height: 1;
+    color: var(--error);
+  }
+  .n8n-error-hero .label{ font-size: 11px; color: var(--text-faint); margin-top: 4px; }
+  .n8n-error-avg{ text-align:center; }
+  .n8n-error-avg .value{ font-family:'Space Grotesk', sans-serif; font-size: 26px; font-weight: 700; color: var(--text-muted); }
+  .n8n-error-avg .label{ font-size: 10.5px; color: var(--text-faint); margin-top: 4px; }
+  .n8n-error-count{ text-align:center; }
+  .n8n-error-count .value{ font-family:'Space Grotesk', sans-serif; font-size: 26px; font-weight: 700; }
+  .n8n-error-count .label{ font-size: 10.5px; color: var(--text-faint); margin-top: 4px; }
+  .n8n-error-spark{ flex: 1; min-width: 160px; }
+  .n8n-error-spark svg{ width: 100%; height: 44px; display:block; }
+  .n8n-error-spark .label{ font-size: 10.5px; color: var(--text-faint); margin-top: 4px; text-align:center; }
+  .n8n-error-empty{ font-size: 12.5px; color: var(--text-muted); }
+
+  .n8n-error-form{
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px dashed var(--border);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px 16px;
+  }
+  .n8n-error-form .field label{
+    display:block; font-size: 11.5px; color: var(--text-muted); margin-bottom: 5px;
+  }
+  .n8n-error-form .field input{
+    width: 100%;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 9px 12px;
+    color: var(--text);
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 12px;
+    outline: none;
+  }
+  .n8n-error-form .field input:focus{ border-color: var(--error); }
+  .n8n-error-form .form-actions{
+    grid-column: 1 / -1;
+    display:flex;
+    align-items:center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .n8n-error-form button{
+    background: var(--text);
+    color: var(--bg);
+    border: none;
+    border-radius: 8px;
+    padding: 9px 16px;
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+  }
+  .n8n-error-form button.ghost{
+    background: transparent;
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+  }
+  .n8n-error-form button:hover{ opacity:.85; }
+  @media (max-width: 700px){ .n8n-error-form{ grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header>
+    <h1>Painel Geral</h1>
+    <p>Visão macro de todas as IAs · Advocacia Escalável</p>
+  </header>
+
+  <div class="status-row">
+    <div class="pulse-wrap">
+      <span class="pulse-dot" id="pulseDot"></span>
+      <span id="statusText">Aguardando conexão</span>
+    </div>
+    <div class="tabs" id="periodTabs">
+      <button data-period="hoje" class="active">Hoje</button>
+      <button data-period="semana">Esta semana</button>
+      <button data-period="mes">Este mês</button>
+    </div>
+    <select id="monthSelect" class="month-select">
+      <option value="">Outro mês…</option>
+    </select>
+  </div>
+
+  <div id="errorBanner"></div>
+
+  <div class="n8n-error-card" id="n8nErrorCard">
+    <div class="n8n-error-top">
+      <div class="n8n-error-title">
+        <span class="tag">OPERACIONAL</span>
+        <h2>Erros n8n</h2>
+        <p>% de erros dos agentes sobre o total de erros do servidor — inserido manualmente por semana</p>
+      </div>
+      <div class="n8n-error-week">
+        <select id="erroWeekSelect" class="week-select"></select>
+        <button id="erroEditBtn" class="icon-btn" title="Registrar semana" type="button">✎</button>
+      </div>
+    </div>
+    <div class="n8n-error-body">
+      <div class="n8n-error-hero">
+        <div class="value" id="erroPctValue">—%</div>
+        <div class="label">erros de agentes / total do servidor</div>
+      </div>
+      <div class="n8n-error-avg">
+        <div class="value" id="erroAvgValue">—%</div>
+        <div class="label">média móvel (4 sem.)</div>
+      </div>
+      <div class="n8n-error-count">
+        <div class="value" id="erroQtdValue">—</div>
+        <div class="label">agentes / total servidor</div>
+      </div>
+      <div class="n8n-error-spark" id="erroSparkWrap">
+        <svg id="erroSparkline" viewBox="0 0 200 44" preserveAspectRatio="none"></svg>
+        <div class="label">últimas semanas</div>
+      </div>
+    </div>
+    <div class="n8n-error-form" id="erroForm" style="display:none;">
+      <div class="field">
+        <label>Semana</label>
+        <input type="week" id="erroInputWeek">
+      </div>
+      <div class="field">
+        <label>Erros totais do servidor</label>
+        <input type="number" id="erroInputTotal" min="0" step="1" placeholder="ex: 40">
+      </div>
+      <div class="field">
+        <label>Erros dos agentes</label>
+        <input type="number" id="erroInputQtd" min="0" step="1" placeholder="ex: 14">
+      </div>
+      <div class="form-actions">
+        <button id="erroSaveBtn" type="button">Salvar semana</button>
+        <button id="erroDeleteBtn" class="ghost" type="button">Excluir semana</button>
+        <button id="erroCancelBtn" class="ghost" type="button">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="content">
+    <div class="empty-state">
+      <h3>Carregando dados…</h3>
+      <p>Buscando o dados.json mais recente publicado pelo n8n.</p>
+    </div>
+  </div>
+
+  <footer id="lastUpdated"></footer>
+
+</div>
+
+<script>
+(function(){
+  // ------------------------------------------------------------
+  // Mapa fixo: qual chave do JSON de cada escritório corresponde a
+  // qual agente, nome de exibição e categoria (comercial / sucesso).
+  // Se um novo escritório ou uma nova IA entrar, basta adicionar aqui.
+  // ------------------------------------------------------------
+  const OFFICES = [
+    {
+      id: 'antonio_galvao', nome: 'Antonio Galvão Advogados',
+      agentes: [
+        { jsonKey: 'antonio', nome: 'Dr. Antonio Galvão', categoria: 'comercial' },
+        { jsonKey: 'sofia',   nome: 'Sofia',               categoria: 'sucesso' },
+      ]
+    },
+    {
+      id: 'ajmm', nome: 'AJMM Advocacia',
+      agentes: [
+        { jsonKey: 'amina', nome: 'Amina', categoria: 'comercial' },
+      ]
+    },
+    {
+      id: 'berardini', nome: 'Berardini Sociedade de Advogados',
+      agentes: [
+        { jsonKey: 'julia', nome: 'Júlia', categoria: 'comercial' },
+      ]
+    },
+    {
+      id: 'andrade_alves', nome: 'Andrade Alves Advogados',
+      agentes: [
+        { jsonKey: 'sofia', nome: 'Sofia', categoria: 'comercial' },
+      ]
+    },
+    {
+      id: 'engel', nome: 'Engel Advogados',
+      agentes: [
+        { jsonKey: 'sofia', nome: 'Sofia', categoria: 'sucesso' },
+        { jsonKey: 'laura', nome: 'Laura', categoria: 'comercial' },
+      ]
+    },
+    {
+      id: 'scotoni_galvao', nome: 'Scotoni e Galvão',
+      agentes: [
+        { jsonKey: 'sofia', nome: 'Sofia', categoria: 'comercial' },
+      ]
+    },
+  ];
+
+  const CATEGORIAS = {
+    comercial: { titulo: 'IA Comercial', sub: 'Qualificação e conversão de leads novos' },
+    sucesso:   { titulo: 'IA de Sucesso do Cliente', sub: 'Atendimento e suporte a clientes ativos' },
+  };
+
+  const ERRO_KEY = 'painel-geral-erros-n8n';
+  const DADOS_JSON_URL = 'dados.json'; // publicado pelo n8n no mesmo repositório/Pages deste painel
+
+  let officeData = {};       // { officeId: jsonPayload | {erro} }
+  let officeUrls = {};       // { officeId: url } — só usado para o filtro de mês customizado
+  let currentPeriod = 'hoje';
+  const mesCache = {};        // { 'yyyy-MM': { officeId: periodo_customizado } }
+  let customData = {};        // dados do mês atualmente selecionado (após fetchMonth)
+  let errosData = {};         // { 'YYYY-Www': { quantidade, percentual } } — inserido manualmente
+
+  const els = {
+    pulseDot: document.getElementById('pulseDot'),
+    statusText: document.getElementById('statusText'),
+    content: document.getElementById('content'),
+    errorBanner: document.getElementById('errorBanner'),
+    lastUpdated: document.getElementById('lastUpdated'),
+    periodTabs: document.getElementById('periodTabs'),
+    monthSelect: document.getElementById('monthSelect'),
+    erroWeekSelect: document.getElementById('erroWeekSelect'),
+    erroEditBtn: document.getElementById('erroEditBtn'),
+    erroPctValue: document.getElementById('erroPctValue'),
+    erroAvgValue: document.getElementById('erroAvgValue'),
+    erroQtdValue: document.getElementById('erroQtdValue'),
+    erroSparkline: document.getElementById('erroSparkline'),
+    erroForm: document.getElementById('erroForm'),
+    erroInputWeek: document.getElementById('erroInputWeek'),
+    erroInputTotal: document.getElementById('erroInputTotal'),
+    erroInputQtd: document.getElementById('erroInputQtd'),
+    erroSaveBtn: document.getElementById('erroSaveBtn'),
+    erroDeleteBtn: document.getElementById('erroDeleteBtn'),
+    erroCancelBtn: document.getElementById('erroCancelBtn'),
+  };
+
+  els.periodTabs.addEventListener('click', (e) => {
+    const btn = e.target.closest('button');
+    if (!btn) return;
+    [...els.periodTabs.children].forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    els.monthSelect.value = '';
+    els.monthSelect.classList.remove('active-custom');
+    currentPeriod = btn.dataset.period;
+    render();
+  });
+
+  els.monthSelect.addEventListener('change', async () => {
+    const mes = els.monthSelect.value;
+    if (!mes) return;
+    [...els.periodTabs.children].forEach(b => b.classList.remove('active'));
+    els.monthSelect.classList.add('active-custom');
+    currentPeriod = 'custom';
+    await fetchMonth(mes);
+  });
+
+  function setStatus(kind, text){
+    els.pulseDot.classList.remove('live', 'error');
+    if (kind === 'live') els.pulseDot.classList.add('live');
+    if (kind === 'error') els.pulseDot.classList.add('error');
+    els.statusText.textContent = text;
+  }
+
+  async function loadDados(){
+    setStatus('loading', 'Carregando dados.json…');
+    try {
+      const res = await fetch(DADOS_JSON_URL, { cache: 'no-store' });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const data = await res.json();
+
+      officeData = data.officeData || {};
+      officeUrls = data.officeUrls || {};
+
+      const comErro = OFFICES.filter(o => officeData[o.id] && officeData[o.id].erro);
+      renderErrorBanner(comErro.map(o => ({ nome: o.nome, erro: officeData[o.id].erro })));
+      populateMonthSelect();
+
+      if (comErro.length === OFFICES.length){
+        setStatus('error', 'Não foi possível carregar nenhum escritório.');
+      } else if (comErro.length > 0){
+        setStatus('live', `Atualizado (${comErro.length} escritório(s) com erro)`);
+      } else {
+        setStatus('live', 'Atualizado');
+      }
+
+      els.lastUpdated.textContent = data.atualizado_em
+        ? 'Atualizado em: ' + new Date(data.atualizado_em).toLocaleString('pt-BR')
+        : 'Atualizado em: ' + new Date().toLocaleString('pt-BR');
+
+      render();
+    } catch(err){
+      setStatus('error', 'Não foi possível carregar o dados.json: ' + err.message);
+    }
+  }
+
+  function renderErrorBanner(comErro){
+    if (!comErro.length){ els.errorBanner.innerHTML = ''; return; }
+    els.errorBanner.innerHTML = `
+      <div class="error-banner">
+        ${comErro.map(r => `<div><b>${r.nome}:</b> ${r.erro}</div>`).join('')}
+      </div>`;
+  }
+
+  function populateMonthSelect(){
+    const set = new Set();
+    Object.values(officeData).forEach(payload => {
+      (payload && payload.meses_disponiveis || []).forEach(m => set.add(m));
+    });
+    const meses = Array.from(set).sort();
+    const current = els.monthSelect.value;
+    els.monthSelect.innerHTML = '<option value="">Outro mês…</option>' +
+      meses.slice().reverse().map(m => `<option value="${m}">${formatMonthLabel(m)}</option>`).join('');
+    els.monthSelect.value = current;
+  }
+
+  function formatMonthLabel(mes){
+    const [ano, m] = mes.split('-');
+    const nomes = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+    return nomes[parseInt(m,10) - 1] + ' / ' + ano;
+  }
+
+  async function fetchMonth(mesRef){
+    if (mesCache[mesRef]){
+      customData = mesCache[mesRef];
+      render();
+      return;
+    }
+    const configured = OFFICES.filter(o => officeUrls[o.id]);
+    setStatus('loading', 'Carregando ' + formatMonthLabel(mesRef) + '…');
+
+    const results = await Promise.all(configured.map(async (o) => {
+      const baseUrl = officeUrls[o.id];
+      try {
+        const url = new URL(baseUrl);
+        url.searchParams.set('mes_ref', mesRef);
+        const res = await fetch(url.toString(), { method: 'GET' });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const data = await res.json();
+        if (data.erro) throw new Error(data.erro);
+        return { id: o.id, nome: o.nome, periodo: data.periodo_customizado };
+      } catch(err){
+        return { id: o.id, nome: o.nome, erro: err.message };
+      }
+    }));
+
+    const dados = {};
+    results.forEach(r => { dados[r.id] = r.erro ? { erro: r.erro } : r.periodo; });
+    mesCache[mesRef] = dados;
+    customData = dados;
+
+    renderErrorBanner(results.filter(r => r.erro));
+    const comErro = results.filter(r => r.erro).length;
+    setStatus(comErro === results.length ? 'error' : 'live',
+      comErro === results.length ? 'Não foi possível carregar nenhum escritório para este mês.' : 'Atualizado');
+
+    render();
+  }
+
+  // ---------- Agregação ----------
+  function metricsFor(office, agente){
+    if (currentPeriod === 'custom'){
+      const officeCustom = customData[office.id];
+      if (!officeCustom || officeCustom.erro) return null;
+      return officeCustom[agente.jsonKey] || null;
+    }
+    const payload = officeData[office.id];
+    if (!payload || payload.erro) return null;
+    const agenteData = payload[agente.jsonKey];
+    if (!agenteData) return null;
+    return agenteData[currentPeriod] || { total:0, atuou:0, emAberto:0, concluidos:0, transferidos:0, efetividade:0 };
+  }
+
+  function pct(v, t){ return t > 0 ? Math.round((v/t) * 100) : 0; }
+
+  function buildCards(){
+    const cards = [];
+    OFFICES.forEach(office => {
+      office.agentes.forEach(agente => {
+        const m = metricsFor(office, agente);
+        cards.push({
+          officeId: office.id,
+          officeNome: office.nome,
+          agenteNome: agente.nome,
+          categoria: agente.categoria,
+          metrics: m,
+          erro: officeData[office.id] && officeData[office.id].erro,
+        });
+      });
+    });
+    return cards;
+  }
+
+  function agregarCategoria(cards){
+    const validos = cards.filter(c => c.metrics);
+    const total = validos.reduce((s,c) => s + c.metrics.total, 0);
+    const atuou = validos.reduce((s,c) => s + c.metrics.atuou, 0);
+    const efetividade = validos.reduce((s,c) => s + c.metrics.efetividade, 0);
+    const concluidos = validos.reduce((s,c) => s + c.metrics.concluidos, 0);
+    const transferidos = validos.reduce((s,c) => s + c.metrics.transferidos, 0);
+    const emAberto = validos.reduce((s,c) => s + c.metrics.emAberto, 0);
+
+    // Efetividade agregada = média simples do % de cada agente (peso igual por IA,
+    // não ponderado por volume de sessões). Só entram na média os agentes que tiveram
+    // sessão no período — um agente com total=0 não deve contar como 0% e puxar a média.
+    const comVolume = validos.filter(c => c.metrics.total > 0);
+    const pctEfetividade = comVolume.length
+      ? Math.round(comVolume.reduce((s,c) => s + (c.metrics.efetividade / c.metrics.total) * 100, 0) / comVolume.length)
+      : 0;
+
+    return { total, atuou, efetividade, concluidos, transferidos, emAberto, pctEfetividade };
+  }
+
+  function renderCategory(categoriaKey, cards){
+    const info = CATEGORIAS[categoriaKey];
+    const agregada = agregarCategoria(cards);
+    return `
+      <div class="category">
+        <div class="category-header ${categoriaKey}">
+          <div class="category-title">
+            <span class="tag">${categoriaKey === 'comercial' ? 'COMERCIAL' : 'SUCESSO DO CLIENTE'}</span>
+            <h2>${info.titulo}</h2>
+            <p>${info.sub}</p>
+          </div>
+          <div class="category-hero ${categoriaKey}">
+            <div class="value">${agregada.pctEfetividade}%</div>
+            <div class="label">efetividade agregada</div>
+          </div>
+          <div class="category-mini-stats">
+            <div class="mini-stat"><div class="value">${agregada.total}</div><div class="label">Sessões</div></div>
+            <div class="mini-stat"><div class="value">${agregada.atuou}</div><div class="label">Atuou</div></div>
+            <div class="mini-stat"><div class="value">${agregada.concluidos}</div><div class="label">Concluídos</div></div>
+            <div class="mini-stat"><div class="value">${agregada.transferidos}</div><div class="label">Transferidos</div></div>
+            <div class="mini-stat"><div class="value">${agregada.emAberto}</div><div class="label">Em aberto</div></div>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  function render(){
+    if (Object.keys(officeData).length === 0) return;
+    const cards = buildCards();
+    const comercial = cards.filter(c => c.categoria === 'comercial');
+    const sucesso = cards.filter(c => c.categoria === 'sucesso');
+    els.content.innerHTML =
+      renderCategory('comercial', comercial) +
+      renderCategory('sucesso', sucesso);
+  }
+
+  // ---------- Erros n8n (métrica manual semanal) ----------
+  function loadErros(){
+    try { errosData = JSON.parse(localStorage.getItem(ERRO_KEY) || '{}'); }
+    catch(e){ errosData = {}; }
+  }
+
+  function saveErrosStorage(){
+    localStorage.setItem(ERRO_KEY, JSON.stringify(errosData));
+  }
+
+  function weekSortKey(weekStr){
+    const [y, w] = weekStr.split('-W');
+    return parseInt(y, 10) * 100 + parseInt(w, 10);
+  }
+
+  function sortedWeeks(){
+    return Object.keys(errosData).sort((a, b) => weekSortKey(b) - weekSortKey(a));
+  }
+
+  function getDateOfISOWeek(week, year){
+    const simple = new Date(year, 0, 1 + (week - 1) * 7);
+    const dow = simple.getDay();
+    const monday = new Date(simple);
+    if (dow <= 4) monday.setDate(simple.getDate() - dow + 1);
+    else monday.setDate(simple.getDate() + 8 - dow);
+    return monday;
+  }
+
+  function weekLabel(weekStr){
+    const [y, w] = weekStr.split('-W').map(Number);
+    const monday = getDateOfISOWeek(w, y);
+    const sunday = new Date(monday);
+    sunday.setDate(monday.getDate() + 6);
+    const fmt = (d) => d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+    return `${fmt(monday)} – ${fmt(sunday)}`;
+  }
+
+  function currentISOWeekString(){
+    const now = new Date();
+    const d = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()));
+    const dayNum = d.getUTCDay() || 7;
+    d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+    const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+    const weekNo = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+    return `${d.getUTCFullYear()}-W${String(weekNo).padStart(2, '0')}`;
+  }
+
+  function weekPercent(weekKey){
+    const entry = errosData[weekKey];
+    if (!entry) return 0;
+    const total = Number(entry.totalServidor) || 0;
+    const agentes = Number(entry.quantidade) || 0;
+    return total > 0 ? (agentes / total) * 100 : 0;
+  }
+
+  function movingAveragePercent(weekKey, windowSize){
+    const ascWeeks = sortedWeeks().slice().reverse(); // cronológico: mais antiga -> mais recente
+    const idx = ascWeeks.indexOf(weekKey);
+    if (idx === -1) return 0;
+    const start = Math.max(0, idx - windowSize + 1);
+    const windowWeeks = ascWeeks.slice(start, idx + 1);
+    const percents = windowWeeks.map(w => weekPercent(w));
+    return percents.reduce((a, b) => a + b, 0) / percents.length;
+  }
+
+  function populateWeekSelect(preferred){
+    const weeks = sortedWeeks();
+    if (weeks.length === 0){
+      els.erroWeekSelect.innerHTML = '<option value="">Sem semanas registradas</option>';
+      return;
+    }
+    els.erroWeekSelect.innerHTML = weeks
+      .map(w => `<option value="${w}">${weekLabel(w)}</option>`)
+      .join('');
+    if (preferred && weeks.includes(preferred)) els.erroWeekSelect.value = preferred;
+  }
+
+  function renderSparkline(weeks){
+    const recent = weeks.slice(0, 12).slice().reverse(); // mais antigas -> mais recentes, até 12 semanas
+    if (recent.length < 2){ els.erroSparkline.innerHTML = ''; return; }
+    const values = recent.map(w => weekPercent(w));
+    const max = Math.max(...values, 1);
+    const min = Math.min(...values, 0);
+    const range = (max - min) || 1;
+    const stepX = 200 / (values.length - 1);
+    const points = values.map((v, i) => {
+      const x = i * stepX;
+      const y = 40 - ((v - min) / range) * 34 - 2;
+      return `${x.toFixed(1)},${y.toFixed(1)}`;
+    }).join(' ');
+    els.erroSparkline.innerHTML = `<polyline points="${points}" fill="none" stroke="var(--error)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>`;
+  }
+
+  function renderErrorCard(){
+    const weeks = sortedWeeks();
+    if (weeks.length === 0){
+      els.erroPctValue.textContent = '—%';
+      els.erroAvgValue.textContent = '—%';
+      els.erroQtdValue.textContent = '—';
+      els.erroSparkline.innerHTML = '';
+      populateWeekSelect();
+      return;
+    }
+    const selected = (els.erroWeekSelect.value && weeks.includes(els.erroWeekSelect.value))
+      ? els.erroWeekSelect.value
+      : weeks[0];
+    populateWeekSelect(selected);
+    const entry = errosData[selected] || { quantidade: 0, totalServidor: 0 };
+    const pct = weekPercent(selected);
+    const avgPct = movingAveragePercent(selected, 4);
+    els.erroPctValue.textContent = pct.toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + '%';
+    els.erroAvgValue.textContent = avgPct.toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + '%';
+    els.erroQtdValue.textContent = `${entry.quantidade ?? 0} / ${entry.totalServidor ?? 0}`;
+    renderSparkline(weeks);
+  }
+
+  function openErroForm(){
+    const weeks = sortedWeeks();
+    const selected = els.erroWeekSelect.value || weeks[0] || currentISOWeekString();
+    const entry = errosData[selected];
+    els.erroInputWeek.value = selected || currentISOWeekString();
+    els.erroInputTotal.value = entry ? entry.totalServidor : '';
+    els.erroInputQtd.value = entry ? entry.quantidade : '';
+    els.erroForm.style.display = 'grid';
+  }
+
+  els.erroEditBtn.addEventListener('click', () => {
+    const isOpen = els.erroForm.style.display === 'grid';
+    if (isOpen){ els.erroForm.style.display = 'none'; }
+    else { openErroForm(); }
+  });
+
+  els.erroCancelBtn.addEventListener('click', () => {
+    els.erroForm.style.display = 'none';
+  });
+
+  els.erroSaveBtn.addEventListener('click', () => {
+    const w = els.erroInputWeek.value;
+    const totalServidor = parseInt(els.erroInputTotal.value, 10);
+    const qtd = parseInt(els.erroInputQtd.value, 10);
+    if (!w || isNaN(totalServidor) || isNaN(qtd)){
+      alert('Preencha semana, erros totais do servidor e erros dos agentes antes de salvar.');
+      return;
+    }
+    if (qtd > totalServidor){
+      alert('A quantidade de erros dos agentes não pode ser maior que o total de erros do servidor.');
+      return;
+    }
+    errosData[w] = { quantidade: qtd, totalServidor };
+    saveErrosStorage();
+    els.erroWeekSelect.value = w in errosData ? w : '';
+    els.erroForm.style.display = 'none';
+    renderErrorCard();
+  });
+
+  els.erroDeleteBtn.addEventListener('click', () => {
+    const w = els.erroInputWeek.value;
+    if (!w || !errosData[w]) return;
+    if (confirm('Excluir os dados da semana ' + weekLabel(w) + '?')){
+      delete errosData[w];
+      saveErrosStorage();
+      els.erroForm.style.display = 'none';
+      renderErrorCard();
+    }
+  });
+
+  els.erroWeekSelect.addEventListener('change', renderErrorCard);
+
+  // ---------- Init ----------
+  loadErros();
+  renderErrorCard();
+  loadDados();
+})();
+</script>
+
+</body>
+</html>
